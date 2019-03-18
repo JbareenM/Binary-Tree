@@ -10,7 +10,7 @@
 #define Tree_hpp
 
 #include <stdio.h>
-using namespace std;
+namespace ariel{
 struct Node{
     int val;
     Node *left;
@@ -34,4 +34,5 @@ private:
     Node *_Root;
     int Size;
 };
+}
 #endif /* Tree_hpp */
