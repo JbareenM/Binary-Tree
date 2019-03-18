@@ -18,6 +18,7 @@ using std::string;
 
 using namespace std;
 using namespace ariel;
+Tree::Tree():Size(0),_Root(NULL){}
 Node* Tree::Root(){return _Root;}
 bool contains(int key, Node *leaf){
     if(leaf!=NULL){
