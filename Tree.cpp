@@ -1,8 +1,8 @@
 //
 //  Tree.cpp
-//  c++
+//  Binary_Tree
 //
-//  Created by Jeme Jbareen on 3/13/19.
+//  Created by Jeme Jbareen on 3/18/19.
 //  Copyright © 2019 Jeme Jbareen. All rights reserved.
 //
 
@@ -109,12 +109,12 @@ Node* remove(Node* root, int k){
     }
 }
 void Tree::remove(int val){
-        if(!contains(val))
-            throw "you are trying to delete unvalid value!";
-        if(_Root!=NULL){
-            ::remove(_Root,val);
-            Size--;
-        }
+    if(!contains(val))
+        throw "you are trying to delete unvalid value!";
+    if(_Root!=NULL){
+        ::remove(_Root,val);
+        Size--;
+    }
 }
 int Tree::size(){return Tree::Size;}
 int Tree::root(){return _Root->val;}
