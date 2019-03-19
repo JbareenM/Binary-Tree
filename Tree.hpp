@@ -12,6 +12,7 @@ namespace ariel{
     class Tree{
     public:
         Tree();
+        ~Tree();
         Node* Root();
         void insert(int val);
         void remove(int val);

@@ -19,6 +19,18 @@ using std::string;
 using namespace std;
 using namespace ariel;
 Tree::Tree():Size(0),_Root(NULL){}
+void rmAll(Node* root){
+    if(root!=NULL){
+        rmAll(root->left);
+        rmAll(root->right);
+        root=NULL;
+        delete root;
+    }
+}
+Tree::~Tree(){
+    ::rmAll(_Root);
+}
+
 Node* Tree::Root(){return _Root;}
 bool contains(int key, Node *leaf){
     if(leaf!=NULL){
