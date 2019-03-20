@@ -60,13 +60,14 @@ void insert(int key,Node *leaf){
     
 }
 void Tree::insert(int val){
+    
     if(Root()!=NULL){
+        if(contains(val))
+            throw "the value is exists!";
         ::insert(val,_Root);
         Size++;
     }
     else{
-        if(contains(val))
-            throw "the value is exists!";
         _Root=new Node;
         _Root->val=val;
         _Root->left=NULL;
