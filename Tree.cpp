@@ -76,6 +76,7 @@ void Tree::insert(int val){
         Size++;
     }
 }
+//https://www.geeksforgeeks.org/binary-search-tree-set-2-delete/
 Node* remove(Node* root, int k){
     if (root == NULL)
         return root;
@@ -87,13 +88,19 @@ Node* remove(Node* root, int k){
         root->right = remove(root->right, k);
         return root;
     }
-    if (root->left == NULL) {
+    if (root!=NULL&&root->left == NULL) {
         Node* temp = root->right;
+        root->parent=NULL;
+        root->right=NULL;
+        root=NULL;
         delete root;
         return temp;
     }
-    else if (root->right == NULL) {
+    else if (root!=NULL&&root->right == NULL) {
         Node* temp = root->left;
+        root->parent=NULL;
+        root->left=NULL;
+        root=NULL;
         delete root;
         return temp;
     }
@@ -114,6 +121,12 @@ void Tree::remove(int val){
     if(!contains(val))
         throw "you are trying to delete unvalid value!";
     if(_Root!=NULL){
+        if(_Root->val==val){
+            _Root=NULL;
+            delete _Root;
+            Size--;
+            return;
+        }
         ::remove(_Root,val);
         Size--;
     }
@@ -136,22 +149,23 @@ Node* Tree::find(int val){
 }
 int Tree::parent(int val){
     Node *a=find(val);
-    if(a->parent!=NULL)
+    if(a!=NULL&&a->parent!=NULL)
         return a->parent->val;
-    return -9999;
+    throw "invalid parent!";
 }
 int Tree::left(int val){
     Node* a=find(val);
-    if(a->left!=NULL)
+    if(a!=NULL&&a->left!=NULL)
         return a->left->val;
-    return 0;
+    throw "there is no left to this value!";
 }
 int Tree::right(int val){
     Node* a=find(val);
-    if(a->right!=NULL)
+    if(a!=NULL&&a->right!=NULL)
         return a->right->val;
-    return 0;
+    throw "there is no right to this value!";
 }
+//https://www.geeksforgeeks.org/print-binary-tree-2-dimensions/
 void print(Node *root,int size, int space){
     if (root == NULL)
         return;
