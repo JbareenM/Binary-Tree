@@ -1,3 +1,11 @@
+//
+//  Tree.cpp
+//  Binary_Tree
+//
+//  Created by Jeme Jbareen on 3/18/19.
+//  Copyright © 2019 Jeme Jbareen. All rights reserved.
+//
+
 #ifndef Tree_hpp
 #define Tree_hpp
 
