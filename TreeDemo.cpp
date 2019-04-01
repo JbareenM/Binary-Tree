@@ -9,8 +9,8 @@
 #include <iostream>
 using std::cout, std::endl;
 
-#include "Tree.hpp"
 
+#include "Tree.hpp"
 int main() {
     try {
         // constructs an empty tree:
@@ -40,4 +40,5 @@ int main() {
         cout << "Caught exception!" << endl;
     }
 }
+
 

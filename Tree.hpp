@@ -21,18 +21,25 @@ namespace ariel{
     public:
         Tree();
         ~Tree();
-        Node* Root();
         void insert(int val);
-        void remove(int val);
+        bool remove(int val);
         int left(int val);
         int right(int val);
         int parent(int val);
         int root();
         int size();
-        Node* find(int val);
         bool contains(int val);
         void print();
     private:
+        bool containsHelp(int key, Node *leaf);
+        void insertHelp(int key,Node *leaf);
+        void printHelp(Node *root,int size, int space);
+        Node* findHelp(int key, Node *leaf);
+        Node* Root();
+        Node* find(int val);
+        void rmAll(Node *root);
+        Node *FindNextNum(int num);
+        Node *FindNextNode(Node *curr);
         Node *_Root;
         int Size;
     };

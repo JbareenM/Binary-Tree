@@ -5,6 +5,7 @@
 //  Created by Jeme Jbareen on 3/18/19.
 //  Copyright © 2019 Jeme Jbareen. All rights reserved.
 //
+
 #include<iostream>
 #include <vector>
 #include <string>
@@ -18,37 +19,39 @@ using std::string;
 using namespace std;
 using namespace ariel;
 Tree::Tree():Size(0),_Root(NULL){}
-void rmAll(Node* root){
-    if(root!=NULL){
-        rmAll(root->left);
-        rmAll(root->right);
-        root=NULL;
-        delete root;
+void Tree::rmAll(Node* root){
+    if(root==NULL)return;
+    rmAll(root->left);
+    rmAll(root->right);
+    if(root->val==_Root->val){
+        delete _Root->parent;
+        _Root->parent=NULL;
     }
+    delete root;
+    root=NULL;
 }
 Tree::~Tree(){
-    ::rmAll(_Root);
+    rmAll(_Root);
 }
-
 Node* Tree::Root(){return _Root;}
-bool contains(int key, Node *leaf){
+bool Tree::containsHelp(int key, Node *leaf){
     if(leaf!=NULL){
         if(key==leaf->val)
             return true;
         if(key<leaf->val)
-            return contains(key, leaf->left);
+            return containsHelp(key, leaf->left);
         else
-            return contains(key, leaf->right);
+            return containsHelp(key, leaf->right);
     }
     else return false;
 }
 bool Tree::contains(int val){
-    return ::contains(val, _Root);
+    return containsHelp(val, _Root);
 }
-void insert(int key,Node *leaf){
+void Tree::insertHelp(int key,Node *leaf){
     if(key< leaf->val){
         if(leaf->left!=NULL)
-            insert(key, leaf->left);
+            insertHelp(key, leaf->left);
         else{
             leaf->left=new Node;
             leaf->left->val=key;
@@ -59,7 +62,7 @@ void insert(int key,Node *leaf){
     }
     else if(key>=leaf->val){
         if(leaf->right!=NULL)
-            insert(key, leaf->right);
+            insertHelp(key, leaf->right);
         else{
             leaf->right=new Node;
             leaf->right->val=key;
@@ -75,7 +78,7 @@ void Tree::insert(int val){
     if(Root()!=NULL){
         if(contains(val))
             throw "the value is exists!";
-        ::insert(val,_Root);
+        insertHelp(val,_Root);
         Size++;
     }
     else{
@@ -87,76 +90,93 @@ void Tree::insert(int val){
         Size++;
     }
 }
-//https://www.geeksforgeeks.org/binary-search-tree-set-2-delete/
-Node* remove(Node* root, int k){
-    if (root == NULL)
-        return root;
-    if (root->val > k) {
-        root->left = remove(root->left, k);
-        return root;
-    }
-    else if (root->val < k) {
-        root->right = remove(root->right, k);
-        return root;
-    }
-    if (root!=NULL&&root->left == NULL) {
-        Node* temp = root->right;
-        root->parent=NULL;
-        root->right=NULL;
-        root=NULL;
-        delete root;
-        return temp;
-    }
-    else if (root!=NULL&&root->right == NULL) {
-        Node* temp = root->left;
-        root->parent=NULL;
-        root->left=NULL;
-        root=NULL;
-        delete root;
-        return temp;
-    }
-    else {
-        Node* succParent = root->right;
-        Node *succ = root->right;
-        while (succ->left != NULL) {
-            succParent = succ;
-            succ = succ->left;
-        }
-        succParent->left = succ->right;
-        root->val = succ->val;
-        delete succ;
-        return root;
-    }
+Node *ariel::Tree::FindNextNum(int num) // Find the next number after num using number
+{
+    Node *curr = find(num);
+    return FindNextNode(curr);
 }
-void Tree::remove(int val){
-    if(!contains(val))
-        throw "you are trying to delete unvalid value!";
-    if(_Root!=NULL){
-        if(_Root->val==val){
-            _Root=NULL;
-            delete _Root;
-            Size--;
-            return;
+
+Node *ariel::Tree::FindNextNode(Node *curr) // Find the next number after num using current node
+{
+    Node *next = curr->right;
+    while (next->left != NULL)
+    {
+        next = next->left;
+    }
+    return next;
+}
+bool ariel::Tree::remove(int num)
+{
+    Node *rm = find(num);
+    if (rm == NULL)
+        throw "invalid value!";
+    if (rm->left == NULL && rm->right == NULL){
+        if (rm->parent != NULL){
+            if (rm->parent->right == rm)
+                rm->parent->right = NULL;
+            else
+                rm->parent->left = NULL;
         }
-        ::remove(_Root,val);
+        else{
+            _Root = NULL;
+        }
+        delete rm;
         Size--;
+        return true;
     }
+    else if (rm->left == NULL || rm->right == NULL){
+        Node *temp = NULL;
+        if (rm->left == NULL)
+            temp = rm->right;
+        if (rm->right == NULL)
+            temp = rm->left;
+        
+        if (rm->parent != NULL)
+        {
+            temp->parent = rm->parent;
+            if (rm->parent->right == rm)
+                rm->parent->right = temp;
+            else
+                rm->parent->left = temp;
+        }
+        else{
+            _Root = temp;
+            temp->parent = NULL;
+        }
+        
+        delete rm;
+        Size--;
+        return true;
+    }
+    else if (rm->left != NULL && rm->right != NULL){
+        Node *next = FindNextNode(rm);
+        int temp = next->val;
+        remove(temp);
+        rm->val = temp;
+        return true;
+    }
+    return false;
 }
+
 int Tree::size(){return Tree::Size;}
-int Tree::root(){return _Root->val;}
-Node* find(int key, Node *leaf){
+int Tree::root(){
+    if(_Root==NULL)
+        throw "there is no root!";
+    return _Root->val;
+}
+Node* Tree::findHelp(int key, Node *leaf){
     if(leaf!=NULL){
         if(key==leaf->val)
             return leaf;
         if(key<leaf->val)
-            return find(key, leaf->left);
+            return findHelp(key, leaf->left);
         else
-            return find(key, leaf->right);
+            return findHelp(key, leaf->right);
     }
     else return NULL;
 }
 Node* Tree::find(int val){
-    return ::find(val, _Root);
+    return findHelp(val, _Root);
 }
 int Tree::parent(int val){
     Node *a=find(val);
@@ -177,15 +197,15 @@ int Tree::right(int val){
     throw "there is no right to this value!";
 }
 //https://www.geeksforgeeks.org/print-binary-tree-2-dimensions/
-void print(Node *root,int size, int space){
+void Tree::printHelp(Node *root,int size, int space){
     if (root == NULL)
         return;
     space += size;
-    ::print(root->right,size, space);
+    printHelp(root->right,size, space);
     cout<<endl;
     for (int i = size; i < space; i++)
         cout<<" ";
     cout<<root->val<<"\n";
-    :: print(root->left,size, space);
+    printHelp(root->left,size, space);
 }
-void Tree::print(){::print(_Root,Size,0);}
+void Tree::print(){printHelp(_Root,Size,0);}
