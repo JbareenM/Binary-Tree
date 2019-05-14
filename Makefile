@@ -1,18 +1,15 @@
 #!make -f
-all: demo test
 
-demo: TreeDemo.o Tree.o
-	clang++ -std=c++17 $^ -o demo
+all: test
+	./$<
+demo:  Demo.o 
+	clang++-5.0 -std=c++17 $^ -o demo
 
-test: TreeTest.o Tree.o
-	clang++ -std=c++17 $^ -o test
+test:  Test.o 
+	clang++-5.0 -std=c++17 $^ -o test
 
-%.o: %.cpp
-	clang++ -std=c++17 --compile $< -o $@
-
-TreeTest.o: badkan.hpp Tree.hpp
-
-TreeDemo.o: Tree.hpp
+%.o: %.cpp range.hpp chain.hpp zip.hpp
+	clang++-5.0 -std=c++17 --compile $< -o $@
 
 clean:
 	rm -f *.o demo test
